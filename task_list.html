@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TaskFlow</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .task {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        a {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Lista de Tarefas</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="title"
+            placeholder="Digite uma tarefa"
+            required
+        >
+
+        <button type="submit">
+            Adicionar
+        </button>
+
+    </form>
+
+
+    {% for task in tasks %}
+
+        <div class="task">
+
+            <span class="{% if task.completed %}completed{% endif %}">
+                {{ task.title }}
+            </span>
+
+            <div>
+
+                <a href="{% url 'complete_task' task.id %}">
+                    {% if task.completed %}
+                        Desfazer
+                    {% else %}
+                        Concluir
+                    {% endif %}
+                </a>
+
+                <a href="{% url 'delete_task' task.id %}">
+                    Excluir
+                </a>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>Nenhuma tarefa cadastrada.</p>
+
+    {% endfor %}
+
+</body>
+
+</html>
